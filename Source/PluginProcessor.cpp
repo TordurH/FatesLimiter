@@ -248,7 +248,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout FatesLimiterAudioProcessor::
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",1 }, "Gain", -20.0f, 20.0f, 1.0f));
+    //layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",1 }, "Gain", -20.0f, 20.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",1 }, "Gain", juce::NormalisableRange(-20.0f,20.0f,0.0f,1.0f), 1.0f));
     //layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "ratio" ,1}, "Ratio", 1.5, 6, 4));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "release",1 }, "Release", 1.0f, 1000.0f, 10.0f));
 	layout.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "dirt",1 }, "Dirt", true));
