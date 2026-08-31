@@ -5,7 +5,12 @@
               companyCopyright="GPLv2" pluginFormats="buildVST3" pluginName="FE Limiter"
               pluginDesc="Mastering limiter" pluginVST3Category="Dynamics,Mastering">
   <MAINGROUP id="JaOE93" name="FatesLimiter">
+    <GROUP id="{445F18CC-6955-A13E-A5C3-FCEF0ACD0EB3}" name="Assets">
+      <FILE id="d72I4E" name="knobStrip.png" compile="0" resource="1" file="Assets/knobStrip.png"/>
+    </GROUP>
     <GROUP id="{F6CF3DAF-5EAD-090C-9080-A905075A418D}" name="Source">
+      <FILE id="Amc8V5" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
+      <FILE id="K6R3mq" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
       <FILE id="iTQFg3" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="gVixJv" name="PluginProcessor.h" compile="0" resource="0"
@@ -37,10 +42,9 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="FatesLimiter" winArchitecture="x64"
-                       intermediatesPath="$(TEMP)\Limiter"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="FatesLimiter" winArchitecture="x64"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="FatesLimiter" winArchitecture="x64"
-                       intermediatesPath="$(TEMP)\Limiter" enablePluginBinaryCopyStep="1"/>
+                       enablePluginBinaryCopyStep="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../../modules"/>

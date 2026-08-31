@@ -14,6 +14,8 @@ FatesLimiterAudioProcessorEditor::FatesLimiterAudioProcessorEditor (FatesLimiter
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
 
+	juce::LookAndFeel::setDefaultLookAndFeel(&MyLookAndFeel);
+
     auto sliderHelper = [&](juce::Slider &slider){
         
         slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -50,10 +52,16 @@ void FatesLimiterAudioProcessorEditor::paint (juce::Graphics& g)
 
 void FatesLimiterAudioProcessorEditor::resized()
 {
+	juce::Rectangle<int> bounds = getLocalBounds();
 
-	sliderGain.setBounds(50, 50, 100, 100);
-	sliderRelease.setBounds(250, 50, 100, 100);
-	buttonDirt.setBounds(150, 200, 100, 30);
+	juce::Rectangle<int> areaLeft = bounds.removeFromLeft(129);
+	juce::Rectangle<int> areaRight = bounds.removeFromRight(129);
+
+	juce::Rectangle<float> areaBottom = bounds.removeFromBottom(125.35f).toFloat();
+
+	sliderGain.setBounds(areaBottom.removeFromLeft(90).toNearestInt());
+	sliderRelease.setBounds(areaBottom.removeFromRight(90).toNearestInt());
+	buttonDirt.setBounds(areaBottom.toNearestInt());
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }

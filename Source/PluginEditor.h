@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "LookAndFeel.h"
 
 //==============================================================================
 /**
@@ -32,6 +33,8 @@ private:
 
 	juce::Slider sliderGain, sliderRelease;
 	juce::ToggleButton buttonDirt;
+
+	myLookAndFeel MyLookAndFeel;
 
 
     // This reference is provided as a quick way for your editor to
