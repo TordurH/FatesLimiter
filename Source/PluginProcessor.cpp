@@ -43,6 +43,12 @@ FatesLimiterAudioProcessor::FatesLimiterAudioProcessor()
     limiter.setRatio(ratio);
 	limiter.setThreshold(threshold);
 
+
+    secondary.setThreshold(-0.2f);
+    secondary.setRelease(500.0f);
+    secondary.setRatio(1.5f);
+    secondary.setAttack(0.1f);
+
     
     
 }
@@ -163,6 +169,15 @@ bool FatesLimiterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
+
+inline void setTargetValue(float value, juce::LinearSmoothedValue<float>& lsv) {
+
+    if (value < lsv.getCurrentValue())
+        lsv.setTargetValue(value);
+    else
+        lsv.setCurrentAndTargetValue(value);
+}
+
 void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -178,6 +193,8 @@ void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsLeft);
+
 	float gain = gainParameter->load();
 	//float ratio = ratioParameter->load();
 	float release = releaseParameter->load();
@@ -186,10 +203,7 @@ void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
 	gainProcessor.setGainDecibels(gain);
 
-	secondary.setThreshold(-0.2f);
-	secondary.setRelease(500.0f);
-	secondary.setRatio(1.5f);
-	secondary.setAttack(0.1f);
+    
 
 	
 	limiter.setRelease(release);
@@ -209,8 +223,18 @@ void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     
     secondary.process(context);
 
+
+    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsRight);
+	
 }
 
+
+float FatesLimiterAudioProcessor::getRmsValue(int channel)
+{
+
+    float result = channel ? rmsLeft.getCurrentValue() : rmsRight.getCurrentValue();
+    return juce::Decibels::gainToDecibels(result);
+}
 //==============================================================================
 bool FatesLimiterAudioProcessor::hasEditor() const
 {
@@ -248,9 +272,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout FatesLimiterAudioProcessor::
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    //layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",1 }, "Gain", -20.0f, 20.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",1 }, "Gain", juce::NormalisableRange(-20.0f,20.0f,0.0f,1.0f), 1.0f));
-    //layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "ratio" ,1}, "Ratio", 1.5, 6, 4));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "release",1 }, "Release", 1.0f, 1000.0f, 10.0f));
 	layout.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "dirt",1 }, "Dirt", true));
 

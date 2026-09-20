@@ -14,6 +14,9 @@ myLookAndFeel::myLookAndFeel()
 {
     knobSequence = juce::ImageCache::getFromMemory(BinaryData::knobStrip_png, BinaryData::knobStrip_pngSize);
     areaToDraw = juce::Rectangle<float>(0, 0, 520, 520);
+
+	imgButtonOff = juce::ImageCache::getFromMemory(BinaryData::ButtonOff_png, BinaryData::ButtonOff_pngSize);
+	imgButtonOn = juce::ImageCache::getFromMemory(BinaryData::ButtonOn_png, BinaryData::ButtonOn_pngSize);
 }
 
 void myLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPosProportional, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
@@ -32,7 +35,6 @@ void myLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width,
 
 	int offset = frameIndex * imgSize;
 
-    DBG("Offset" << offset);
 
     if (knobSequence.isValid())
     {
@@ -44,10 +46,21 @@ void myLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width,
 }  
 
 
-void myLookAndFeel::drawToggleButton(juce::Graphics&, juce::ToggleButton&, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) {
+void myLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) {
 	
 
 	//Draw the button here, you can use the shouldDrawButtonAsHighlighted and shouldDrawButtonAsDown parameters to determine the button's state and draw accordingly.
 
+	areaToDraw = button.getLocalBounds().toFloat();
+
+    if(button.getToggleState())
+    {
+		g.drawImage(imgButtonOn, 0, 0, areaToDraw.getWidth(), areaToDraw.getHeight(), 0, 0, imgButtonOn.getWidth(), imgButtonOn.getHeight());
+    }
+    else
+    {
+        // Draw the button in the "off" state
+        g.drawImage(imgButtonOff, 0, 0, areaToDraw.getWidth(), areaToDraw.getHeight(), 0, 0, imgButtonOff.getWidth(), imgButtonOff.getHeight());
+    }
 
 }

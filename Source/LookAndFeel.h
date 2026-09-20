@@ -23,7 +23,11 @@ public:
     void drawRotarySlider(juce::Graphics&, int x, int y, int width, int height, float sliderPosProportional, float rotaryStartAngle, float rotaryEndAngle, juce::Slider&) override;
 	void drawToggleButton(juce::Graphics&, juce::ToggleButton&, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 
+
 private:
     juce::Image knobSequence;
     juce::Rectangle<float> areaToDraw;
+
+    juce::Image imgButtonOff;
+    juce::Image imgButtonOn;
 };

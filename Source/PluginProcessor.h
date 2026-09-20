@@ -57,9 +57,13 @@ public:
 
 	juce::AudioProcessorValueTreeState apvts;
 
+    float getRmsValue(int channel);
+
 private:
 
-    float attackTime = 0.3f, ratio = 20.0f, threshold = -0.3;
+    float attackTime = 0.1f, ratio = 20.0f, threshold = -0.3;
+
+    juce::LinearSmoothedValue<float> rmsRight{}, rmsLeft{};
 
 	juce::dsp::Gain<float> gainProcessor;
 

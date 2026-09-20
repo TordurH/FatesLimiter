@@ -6,11 +6,20 @@
               pluginDesc="Mastering limiter" pluginVST3Category="Dynamics,Mastering">
   <MAINGROUP id="JaOE93" name="FatesLimiter">
     <GROUP id="{445F18CC-6955-A13E-A5C3-FCEF0ACD0EB3}" name="Assets">
+      <FILE id="bMut4t" name="metal.png" compile="0" resource="1" file="Assets/metal.png"/>
+      <FILE id="nZM6bl" name="ButtonOn.png" compile="0" resource="1" file="Assets/ButtonOn.png"/>
+      <FILE id="NgWyCN" name="ButtonOff.png" compile="0" resource="1" file="Assets/ButtonOff.png"/>
       <FILE id="d72I4E" name="knobStrip.png" compile="0" resource="1" file="Assets/knobStrip.png"/>
     </GROUP>
     <GROUP id="{F6CF3DAF-5EAD-090C-9080-A905075A418D}" name="Source">
-      <FILE id="Amc8V5" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
-      <FILE id="K6R3mq" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
+      <GROUP id="{4863D86D-DDF0-55E8-5F6E-AC32CD822429}" name="Meters">
+        <FILE id="FCJ2of" name="gainMeter.cpp" compile="1" resource="0" file="Source/gainMeter.cpp"/>
+        <FILE id="bIsv8I" name="gainMeter.h" compile="0" resource="0" file="Source/gainMeter.h"/>
+      </GROUP>
+      <GROUP id="{66A7DB4A-7D94-0795-1EEA-6E7C096C40AC}" name="GUI">
+        <FILE id="Amc8V5" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
+        <FILE id="K6R3mq" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
+      </GROUP>
       <FILE id="iTQFg3" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="gVixJv" name="PluginProcessor.h" compile="0" resource="0"
