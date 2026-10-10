@@ -26,7 +26,9 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+
 private:
+
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> releaseAttachment;

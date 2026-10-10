@@ -57,13 +57,17 @@ public:
 
 	juce::AudioProcessorValueTreeState apvts;
 
-    float getRmsValue(int channel);
+    std::array<juce::LinearSmoothedValue<float>, 2> getRmsValueBefore();
+    std::array<juce::LinearSmoothedValue<float>, 2> getRmsValueAfter();
+
+	juce::AudioVisualiserComponent waveform;
 
 private:
 
     float attackTime = 0.1f, ratio = 20.0f, threshold = -0.3;
 
-    juce::LinearSmoothedValue<float> rmsRight{}, rmsLeft{};
+    std::array<juce::LinearSmoothedValue<float>, 2> rmsBefore{ 0,0 };
+    std::array<juce::LinearSmoothedValue<float>, 2> rmsAfter{ 0,0 };
 
 	juce::dsp::Gain<float> gainProcessor;
 

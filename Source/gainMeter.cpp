@@ -19,7 +19,7 @@ gainMeter::gainMeter()
 
 }
 
-gainMeter::gainMeter(std::function<float()>&& callback) : getGainValue(std::move(callback))
+gainMeter::gainMeter(std::function<std::array<juce::LinearSmoothedValue<float>, 2>()>&& callback) : getGainValue(std::move(callback))
 {
    
 	startTimerHz(30); // Start the timer with a frequency of 30 Hz
@@ -44,7 +44,10 @@ void gainMeter::paint (juce::Graphics& g)
        drawing code..
     */
 
-    const float level = getGainValue();
+    std::array<juce::LinearSmoothedValue<float>, 2> gainValues = getGainValue();
+
+    const float levelL = juce::Decibels::gainToDecibels(gainValues[0].getCurrentValue());
+	const float levelR = juce::Decibels::gainToDecibels(gainValues[1].getCurrentValue());
 
     int offsetX = 40;
 	int offsetY = 50;
@@ -54,11 +57,17 @@ void gainMeter::paint (juce::Graphics& g)
 	g.setColour(juce::Colours::black);
     g.fillRect(bounds);
 
+	juce::Rectangle<float>  leftMeter = bounds.removeFromLeft(bounds.getWidth() / 2.0f);
+
 	g.setGradientFill(gradient);
 
-	const float scaledY = juce::jmap(level, -60.0f, 6.0f, 0.0f,static_cast<float>(getHeight()));
+	const float scaledYLeft = juce::jmap(levelL, -60.0f, 6.0f, 0.0f,static_cast<float>(getHeight()));
+	const float scaledYRight = juce::jmap(levelR, -60.0f, 6.0f, 0.0f,static_cast<float>(getHeight()));
 
-	g.fillRoundedRectangle(bounds.removeFromBottom(scaledY), 5.0f);
+	DBG("Level L: " << levelL << " dB, Level R: " << levelR << " dB");
+
+	g.fillRoundedRectangle(leftMeter.removeFromBottom(scaledYLeft), 5.0f);
+	g.fillRoundedRectangle(bounds.removeFromBottom(scaledYRight), 5.0f);
 
 
    

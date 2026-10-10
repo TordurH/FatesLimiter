@@ -11,10 +11,12 @@
 
 //==============================================================================
 FatesLimiterAudioProcessorEditor::FatesLimiterAudioProcessorEditor (FatesLimiterAudioProcessor& p)
-	: AudioProcessorEditor(&p), audioProcessor(p), 
-		gainIn([&]() {return audioProcessor.getRmsValue(0); }),
-		gainOut([&]() {return audioProcessor.getRmsValue(1); })
+	: AudioProcessorEditor(&p), audioProcessor(p),
+		gainIn([&]() {return audioProcessor.getRmsValueBefore(); }),
+		gainOut([&]() {return audioProcessor.getRmsValueAfter(); })
 {
+
+	
 
 	juce::LookAndFeel::setDefaultLookAndFeel(&MyLookAndFeel);
 
@@ -38,6 +40,8 @@ FatesLimiterAudioProcessorEditor::FatesLimiterAudioProcessorEditor (FatesLimiter
 
 	addAndMakeVisible(&gainIn);
 	addAndMakeVisible(&gainOut);
+
+	addAndMakeVisible(audioProcessor.waveform);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (700, 350);
@@ -75,6 +79,8 @@ void FatesLimiterAudioProcessorEditor::resized()
 	sliderGain.setBounds(areaBottom.removeFromLeft(90).toNearestInt());
 	sliderRelease.setBounds(areaBottom.removeFromRight(90).toNearestInt());
 	buttonDirt.setBounds(areaBottom.toNearestInt());
+
+	audioProcessor.waveform.setBounds(bounds);
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }

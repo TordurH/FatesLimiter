@@ -19,7 +19,7 @@ FatesLimiterAudioProcessor::FatesLimiterAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-	 ), apvts(*this, nullptr, juce::Identifier("FatesLimiter"), createParameterLayout())
+	 ), apvts(*this, nullptr, juce::Identifier("FatesLimiter"), createParameterLayout()), waveform(2)
 #endif
 {
 
@@ -49,8 +49,10 @@ FatesLimiterAudioProcessor::FatesLimiterAudioProcessor()
     secondary.setRatio(1.5f);
     secondary.setAttack(0.1f);
 
-    
-    
+    waveform.setColours(juce::Colours::black, juce::Colours::green);
+	waveform.setRepaintRate(30);
+	waveform.setBufferSize(512);
+
 }
 
 FatesLimiterAudioProcessor::~FatesLimiterAudioProcessor()
@@ -135,6 +137,11 @@ void FatesLimiterAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 	limiter.prepare(spec);
     secondary.prepare(spec);
 
+	waveform.setSamplesPerBlock(samplesPerBlock);
+	
+    waveform.setNumChannels(spec.numChannels);
+    
+ 
 }
 
 void FatesLimiterAudioProcessor::releaseResources()
@@ -193,7 +200,10 @@ void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsLeft);
+
+
+    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsBefore[0]);
+    setTargetValue(buffer.getRMSLevel(1, 0, buffer.getNumSamples()), rmsBefore[1]);
 
 	float gain = gainParameter->load();
 	//float ratio = ratioParameter->load();
@@ -223,18 +233,28 @@ void FatesLimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     
     secondary.process(context);
 
+	waveform.pushBuffer(buffer);
 
-    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsRight);
+    setTargetValue(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), rmsAfter[0]);
+    setTargetValue(buffer.getRMSLevel(1, 0, buffer.getNumSamples()), rmsAfter[1]);
 	
 }
 
 
-float FatesLimiterAudioProcessor::getRmsValue(int channel)
+std::array<juce::LinearSmoothedValue<float>, 2> FatesLimiterAudioProcessor::getRmsValueBefore()
+{
+    
+    return rmsBefore;
+}
+
+std::array<juce::LinearSmoothedValue<float>, 2> FatesLimiterAudioProcessor::getRmsValueAfter()
 {
 
-    float result = channel ? rmsLeft.getCurrentValue() : rmsRight.getCurrentValue();
-    return juce::Decibels::gainToDecibels(result);
+    return rmsAfter;
 }
+
+
+
 //==============================================================================
 bool FatesLimiterAudioProcessor::hasEditor() const
 {

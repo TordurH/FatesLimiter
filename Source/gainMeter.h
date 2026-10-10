@@ -20,7 +20,7 @@ class gainMeter  : public juce::Component, public juce::Timer
 {
 public:
     gainMeter();
-    gainMeter(std::function<float()>&& callback);
+    gainMeter(std::function<std::array<juce::LinearSmoothedValue<float>, 2>()>&& callback);
     ~gainMeter() override;
 
     void paint (juce::Graphics&) override;
@@ -29,9 +29,8 @@ public:
 
 private:
 
-    //float gainValue{}; // Variable to store the gain value
-
-	std::function<float()> getGainValue; // Callback function for gain changes
+	
+	std::function<std::array<juce::LinearSmoothedValue<float>, 2>()> getGainValue; // Callback function for gain changes
 
     juce::ColourGradient gradient;
 
